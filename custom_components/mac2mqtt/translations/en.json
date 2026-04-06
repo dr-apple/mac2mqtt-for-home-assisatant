@@ -1,0 +1,33 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Set up Mac2MQTT",
+        "description": "Connect Home Assistant to one mac2mqtt host.",
+        "data": {
+          "name": "Name",
+          "computer_name": "Computer name",
+          "base_topic": "Base topic"
+        }
+      }
+    },
+    "error": {
+      "required": "Please fill out all fields."
+    },
+    "abort": {
+      "already_configured": "This mac2mqtt host is already configured."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Mac2MQTT options",
+        "data": {
+          "name": "Name",
+          "computer_name": "Computer name",
+          "base_topic": "Base topic"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "domain": "mac2mqtt",
+  "name": "Mac2MQTT",
+  "codeowners": [
+    "@drapple"
+  ],
+  "config_flow": true,
+  "dependencies": [
+    "mqtt"
+  ],
+  "documentation": "https://github.com/drapple/mac2mqtt-hacs",
+  "iot_class": "local_push",
+  "issue_tracker": "https://github.com/drapple/mac2mqtt-hacs/issues",
+  "loggers": [
+    "custom_components.mac2mqtt"
+  ],
+  "requirements": [],
+  "version": "0.1.0"
+}
