@@ -1,0 +1,35 @@
+{
+  "entity": {
+    "binary_sensor": {
+      "alive": {
+        "default": "mdi:laptop"
+      }
+    },
+    "sensor": {
+      "battery": {
+        "default": "mdi:battery"
+      }
+    },
+    "switch": {
+      "mute": {
+        "default": "mdi:volume-mute"
+      }
+    },
+    "number": {
+      "volume": {
+        "default": "mdi:volume-high"
+      }
+    },
+    "button": {
+      "sleep": {
+        "default": "mdi:power-sleep"
+      },
+      "shutdown": {
+        "default": "mdi:power"
+      },
+      "displaysleep": {
+        "default": "mdi:monitor-off"
+      }
+    }
+  }
+}
