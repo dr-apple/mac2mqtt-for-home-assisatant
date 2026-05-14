@@ -6,6 +6,7 @@ Custom Home Assistant integration for `mac2mqtt` / `mac2mqttd`.
 
 - `binary_sensor`: Alive, Display, Locked
 - `sensor`: Battery, Power Source, Display Changed At
+- `select`: App, Screensaver
 - `switch`: Mute, Display Power
 - `number`: Volume (0-100)
 - `button`: Sleep, Shutdown, Display Sleep, Display Wake, Start Screensaver
@@ -45,8 +46,9 @@ The integration uses:
 On Macs without an internal battery, `status/battery` and `status/power_source`
 are not published and existing retained values are cleared by `mac2mqttd`.
 The Mac app publishes MQTT Discovery `select` entities for `App` and
-`Screensaver`; those selects are created by MQTT Discovery, not by this custom
-integration. Notifications are shown as a frontmost dialog on the Mac.
+`Screensaver`; this integration reads those option lists and exposes native
+Mac2MQTT select entities that publish to `command/app` and `command/screensaver`.
+Notifications are shown as a frontmost dialog on the Mac.
 
 ## HACS install
 

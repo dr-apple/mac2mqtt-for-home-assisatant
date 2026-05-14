@@ -35,6 +35,14 @@
         "default": "mdi:volume-high"
       }
     },
+    "select": {
+      "app_select": {
+        "default": "mdi:application"
+      },
+      "screensaver_select": {
+        "default": "mdi:monitor-screenshot"
+      }
+    },
     "button": {
       "sleep": {
         "default": "mdi:power-sleep"

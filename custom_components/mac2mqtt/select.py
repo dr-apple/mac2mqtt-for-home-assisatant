@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from typing import Any
-
 from homeassistant.components.select import SelectEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
@@ -21,46 +19,54 @@ async def async_setup_entry(
 ) -> None:
     """Set up select entities."""
     coordinator: Mac2MQTTCoordinator = hass.data[DOMAIN][entry.entry_id]
-    async_add_entities([Mac2MQTTAppSelect(coordinator)])
+    async_add_entities(
+        [
+            Mac2MQTTCommandSelect(
+                coordinator,
+                "app_select",
+                "App",
+                "app",
+                "app_options",
+                "mdi:application",
+            ),
+            Mac2MQTTCommandSelect(
+                coordinator,
+                "screensaver_select",
+                "Screensaver",
+                "screensaver",
+                "screensaver_options",
+                "mdi:monitor-screenshot",
+            ),
+        ]
+    )
 
 
-class Mac2MQTTAppSelect(Mac2MQTTEntity, SelectEntity):
-    """Select an installed app to launch or activate."""
+class Mac2MQTTCommandSelect(Mac2MQTTEntity, SelectEntity):
+    """Select an option and publish it as a command payload."""
 
-    _attr_icon = "mdi:application"
-
-    def __init__(self, coordinator: Mac2MQTTCoordinator) -> None:
-        super().__init__(coordinator, "app_select", "App")
+    def __init__(
+        self,
+        coordinator: Mac2MQTTCoordinator,
+        key: str,
+        name: str,
+        command: str,
+        options_key: str,
+        icon: str,
+    ) -> None:
+        super().__init__(coordinator, key, name)
+        self._command = command
+        self._options_key = options_key
+        self._attr_icon = icon
         self._attr_current_option = None
 
     @property
     def options(self) -> list[str]:
-        """Return installed app names."""
-        apps = self.coordinator.data.get("apps")
-        if not isinstance(apps, list):
-            return []
-
-        names: list[str] = []
-        seen: set[str] = set()
-        for app in apps:
-            name = _app_name(app)
-            if name is None or name in seen:
-                continue
-            names.append(name)
-            seen.add(name)
-        return names
+        """Return options published by the Mac app."""
+        options = self.coordinator.data.get(self._options_key)
+        return options if isinstance(options, list) else []
 
     async def async_select_option(self, option: str) -> None:
-        """Launch or activate the selected app."""
+        """Publish the selected option."""
         self._attr_current_option = option
-        await self.coordinator.async_publish_command("app", option)
+        await self.coordinator.async_publish_command(self._command, option)
         self.async_write_ha_state()
-
-
-def _app_name(app: Any) -> str | None:
-    """Return an app name from the published app object."""
-    if not isinstance(app, dict):
-        return None
-
-    name = app.get("name")
-    return name if isinstance(name, str) and name else None
