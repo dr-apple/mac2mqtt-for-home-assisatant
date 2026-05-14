@@ -12,7 +12,6 @@ DEFAULT_BASE_TOPIC = "mac2mqtt"
 PLATFORMS: list[Platform] = [
     Platform.BINARY_SENSOR,
     Platform.SENSOR,
-    Platform.SELECT,
     Platform.SWITCH,
     Platform.NUMBER,
     Platform.BUTTON,
