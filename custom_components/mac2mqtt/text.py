@@ -1,8 +1,8 @@
-"""Button entities for mac2mqtt actions."""
+"""Text entities for mac2mqtt commands."""
 
 from __future__ import annotations
 
-from homeassistant.components.button import ButtonEntity
+from homeassistant.components.text import TextEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -17,24 +17,25 @@ async def async_setup_entry(
     entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    """Set up button entities."""
+    """Set up text entities."""
     coordinator: Mac2MQTTCoordinator = hass.data[DOMAIN][entry.entry_id]
     async_add_entities(
         [
-            Mac2MQTTCommandButton(coordinator, "sleep", "Sleep", "mdi:power-sleep"),
-            Mac2MQTTCommandButton(coordinator, "shutdown", "Shutdown", "mdi:power"),
-            Mac2MQTTCommandButton(
-                coordinator, "displaysleep", "Display Sleep", "mdi:monitor-off"
-            ),
-            Mac2MQTTCommandButton(
-                coordinator, "displaywake", "Display Wake", "mdi:monitor"
+            Mac2MQTTCommandText(coordinator, "say", "Say", "mdi:account-voice"),
+            Mac2MQTTCommandText(
+                coordinator,
+                "notification",
+                "Notification",
+                "mdi:message-alert-outline",
             ),
         ]
     )
 
 
-class Mac2MQTTCommandButton(Mac2MQTTEntity, ButtonEntity):
-    """Button that publishes one command payload."""
+class Mac2MQTTCommandText(Mac2MQTTEntity, TextEntity):
+    """Text entity that publishes its value as a command payload."""
+
+    _attr_mode = "text"
 
     def __init__(
         self,
@@ -46,7 +47,10 @@ class Mac2MQTTCommandButton(Mac2MQTTEntity, ButtonEntity):
         super().__init__(coordinator, command, name)
         self._command = command
         self._attr_icon = icon
+        self._attr_native_value = None
 
-    async def async_press(self) -> None:
-        """Publish command."""
-        await self.coordinator.async_publish_command(self._command, self._command)
+    async def async_set_value(self, value: str) -> None:
+        """Publish the entered text."""
+        self._attr_native_value = value
+        await self.coordinator.async_publish_command(self._command, value)
+        self.async_write_ha_state()

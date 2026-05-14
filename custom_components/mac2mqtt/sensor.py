@@ -27,6 +27,8 @@ async def async_setup_entry(
         [
             Mac2MQTTBatteryEntity(coordinator),
             Mac2MQTTDisplayChangedAtEntity(coordinator),
+            Mac2MQTTFocusModeEntity(coordinator),
+            Mac2MQTTPowerSourceEntity(coordinator),
         ]
     )
 
@@ -66,3 +68,31 @@ class Mac2MQTTDisplayChangedAtEntity(Mac2MQTTEntity, SensorEntity):
             return None
 
         return dt_util.parse_datetime(value)
+
+
+class Mac2MQTTFocusModeEntity(Mac2MQTTEntity, SensorEntity):
+    """Current macOS focus mode sensor."""
+
+    _attr_icon = "mdi:moon-waning-crescent"
+
+    def __init__(self, coordinator: Mac2MQTTCoordinator) -> None:
+        super().__init__(coordinator, "focus_mode", "Focus Mode")
+
+    @property
+    def native_value(self) -> str | None:
+        """Return the current macOS focus mode."""
+        return self.coordinator.data.get("focus_mode")
+
+
+class Mac2MQTTPowerSourceEntity(Mac2MQTTEntity, SensorEntity):
+    """Current Mac power source sensor."""
+
+    _attr_icon = "mdi:power-plug-battery"
+
+    def __init__(self, coordinator: Mac2MQTTCoordinator) -> None:
+        super().__init__(coordinator, "power_source", "Power Source")
+
+    @property
+    def native_value(self) -> str | None:
+        """Return the current Mac power source."""
+        return self.coordinator.data.get("power_source")

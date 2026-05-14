@@ -30,8 +30,10 @@ class Mac2MQTTCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             "battery": None,
             "display": None,
             "display_changed_at": None,
+            "focus_mode": None,
             "volume": None,
             "mute": None,
+            "power_source": None,
         }
 
     async def async_start(self) -> None:
@@ -40,8 +42,10 @@ class Mac2MQTTCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         await self._subscribe("battery")
         await self._subscribe("display")
         await self._subscribe("display_changed_at")
+        await self._subscribe("focus_mode")
         await self._subscribe("volume")
         await self._subscribe("mute")
+        await self._subscribe("power_source")
 
     async def async_stop(self) -> None:
         """Unsubscribe from all topics."""
@@ -63,6 +67,8 @@ class Mac2MQTTCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                     parsed = int(payload)
                 except ValueError:
                     parsed = None
+            elif metric in ("display_changed_at", "focus_mode", "power_source"):
+                parsed = payload or None
 
             self.data[metric] = parsed
             self.async_set_updated_data(dict(self.data))

@@ -5,10 +5,11 @@ Custom Home Assistant integration for `mac2mqtt` / `mac2mqttd`.
 ## Features
 
 - `binary_sensor`: Alive, Display
-- `sensor`: Battery, Display Changed At
+- `sensor`: Battery, Power Source, Display Changed At, Focus Mode
 - `switch`: Mute, Display Power
 - `number`: Volume (0-100)
-- `button`: Sleep, Shutdown, Display Sleep
+- `button`: Sleep, Shutdown, Display Sleep, Display Wake
+- `text`: Say, Notification
 
 ## MQTT topic mapping
 
@@ -22,8 +23,10 @@ The integration uses:
 - Status subscribe:
   - `mac2mqtt/my-macbook/status/alive`
   - `mac2mqtt/my-macbook/status/battery`
+  - `mac2mqtt/my-macbook/status/power_source`
   - `mac2mqtt/my-macbook/status/display`
   - `mac2mqtt/my-macbook/status/display_changed_at`
+  - `mac2mqtt/my-macbook/status/focus_mode`
   - `mac2mqtt/my-macbook/status/volume`
   - `mac2mqtt/my-macbook/status/mute`
 - Command publish:
@@ -32,7 +35,10 @@ The integration uses:
   - `mac2mqtt/my-macbook/command/sleep`
   - `mac2mqtt/my-macbook/command/shutdown`
   - `mac2mqtt/my-macbook/command/displaysleep`
+  - `mac2mqtt/my-macbook/command/displaywake`
   - `mac2mqtt/my-macbook/command/display` (`sleep` / `wake`)
+  - `mac2mqtt/my-macbook/command/say`
+  - `mac2mqtt/my-macbook/command/notification`
 
 ## HACS install
 
