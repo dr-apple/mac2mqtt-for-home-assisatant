@@ -19,7 +19,12 @@ async def async_setup_entry(
 ) -> None:
     """Set up switches."""
     coordinator: Mac2MQTTCoordinator = hass.data[DOMAIN][entry.entry_id]
-    async_add_entities([Mac2MQTTMuteSwitch(coordinator)])
+    async_add_entities(
+        [
+            Mac2MQTTMuteSwitch(coordinator),
+            Mac2MQTTDisplayPowerSwitch(coordinator),
+        ]
+    )
 
 
 class Mac2MQTTMuteSwitch(Mac2MQTTEntity, SwitchEntity):
@@ -43,3 +48,26 @@ class Mac2MQTTMuteSwitch(Mac2MQTTEntity, SwitchEntity):
     async def async_turn_off(self, **kwargs: object) -> None:
         """Unmute output."""
         await self.coordinator.async_publish_command("mute", "false")
+
+
+class Mac2MQTTDisplayPowerSwitch(Mac2MQTTEntity, SwitchEntity):
+    """Display power switch."""
+
+    _attr_icon = "mdi:monitor"
+
+    def __init__(self, coordinator: Mac2MQTTCoordinator) -> None:
+        super().__init__(coordinator, "display_power", "Display Power")
+
+    @property
+    def is_on(self) -> bool | None:
+        """Return true when at least one display is active."""
+        value = self.coordinator.data.get("display")
+        return bool(value) if value is not None else None
+
+    async def async_turn_on(self, **kwargs: object) -> None:
+        """Wake display output."""
+        await self.coordinator.async_publish_command("display", "wake")
+
+    async def async_turn_off(self, **kwargs: object) -> None:
+        """Sleep display output."""
+        await self.coordinator.async_publish_command("display", "sleep")
