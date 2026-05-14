@@ -68,6 +68,9 @@
       "notification": {
         "default": "mdi:message-alert-outline"
       },
+      "notification_foreground": {
+        "default": "mdi:message-badge-outline"
+      },
       "screensaver": {
         "default": "mdi:television-ambient-light"
       },
