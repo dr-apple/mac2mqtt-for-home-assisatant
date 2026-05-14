@@ -33,6 +33,7 @@ class Mac2MQTTCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             "display": None,
             "display_changed_at": None,
             "locked": None,
+            "media_playing": None,
             "volume": None,
             "mute": None,
             "power_source": None,
@@ -46,6 +47,7 @@ class Mac2MQTTCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         await self._subscribe("display")
         await self._subscribe("display_changed_at")
         await self._subscribe("locked")
+        await self._subscribe("media_playing")
         await self._subscribe("volume")
         await self._subscribe("mute")
         await self._subscribe("power_source")
@@ -65,7 +67,7 @@ class Mac2MQTTCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         def _message_received(msg: mqtt.ReceiveMessage) -> None:
             payload = msg.payload
             parsed: Any = payload
-            if metric in ("alive", "display", "locked", "mute"):
+            if metric in ("alive", "display", "locked", "media_playing", "mute"):
                 parsed = payload.lower() == "true"
             elif metric in ("battery", "volume"):
                 try:

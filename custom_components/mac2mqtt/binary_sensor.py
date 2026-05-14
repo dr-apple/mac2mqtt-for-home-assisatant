@@ -31,6 +31,12 @@ LOCKED_DESCRIPTION = BinarySensorEntityDescription(
     icon="mdi:lock",
 )
 
+MEDIA_PLAYING_DESCRIPTION = BinarySensorEntityDescription(
+    key="media_playing",
+    name="Media Playing",
+    icon="mdi:play-circle",
+)
+
 
 async def async_setup_entry(
     hass: HomeAssistant,
@@ -44,6 +50,7 @@ async def async_setup_entry(
             Mac2MQTTAliveEntity(coordinator),
             Mac2MQTTDisplayEntity(coordinator),
             Mac2MQTTLockedEntity(coordinator),
+            Mac2MQTTMediaPlayingEntity(coordinator),
         ]
     )
 
@@ -90,4 +97,19 @@ class Mac2MQTTLockedEntity(Mac2MQTTEntity, BinarySensorEntity):
     def is_on(self) -> bool | None:
         """Return true when the user session is locked."""
         value = self.coordinator.data.get("locked")
+        return bool(value) if value is not None else None
+
+
+class Mac2MQTTMediaPlayingEntity(Mac2MQTTEntity, BinarySensorEntity):
+    """Media playback status entity."""
+
+    entity_description = MEDIA_PLAYING_DESCRIPTION
+
+    def __init__(self, coordinator: Mac2MQTTCoordinator) -> None:
+        super().__init__(coordinator, "media_playing", "Media Playing")
+
+    @property
+    def is_on(self) -> bool | None:
+        """Return true when media is currently playing."""
+        value = self.coordinator.data.get("media_playing")
         return bool(value) if value is not None else None
