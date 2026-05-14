@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from datetime import datetime
+from typing import Any
 
 from homeassistant.components.sensor import SensorDeviceClass, SensorEntity, SensorStateClass
 from homeassistant.config_entries import ConfigEntry
@@ -25,13 +26,37 @@ async def async_setup_entry(
     coordinator: Mac2MQTTCoordinator = hass.data[DOMAIN][entry.entry_id]
     async_add_entities(
         [
+            Mac2MQTTAppsEntity(coordinator),
             Mac2MQTTBatteryEntity(coordinator),
             Mac2MQTTDisplayChangedAtEntity(coordinator),
-            Mac2MQTTFocusModeEntity(coordinator),
             Mac2MQTTPowerSourceEntity(coordinator),
             Mac2MQTTScreenSaverSelectedEntity(coordinator),
         ]
     )
+
+
+class Mac2MQTTAppsEntity(Mac2MQTTEntity, SensorEntity):
+    """Installed apps list sensor."""
+
+    _attr_icon = "mdi:application-array"
+
+    def __init__(self, coordinator: Mac2MQTTCoordinator) -> None:
+        super().__init__(coordinator, "apps", "Apps")
+
+    @property
+    def native_value(self) -> int | None:
+        """Return the number of published apps."""
+        value = self.coordinator.data.get("apps")
+        return len(value) if isinstance(value, list) else None
+
+    @property
+    def extra_state_attributes(self) -> dict[str, Any] | None:
+        """Return the published app list as attributes."""
+        value = self.coordinator.data.get("apps")
+        if not isinstance(value, list):
+            return None
+
+        return {"apps": value}
 
 
 class Mac2MQTTBatteryEntity(Mac2MQTTEntity, SensorEntity):
@@ -69,20 +94,6 @@ class Mac2MQTTDisplayChangedAtEntity(Mac2MQTTEntity, SensorEntity):
             return None
 
         return dt_util.parse_datetime(value)
-
-
-class Mac2MQTTFocusModeEntity(Mac2MQTTEntity, SensorEntity):
-    """Current macOS focus mode sensor."""
-
-    _attr_icon = "mdi:moon-waning-crescent"
-
-    def __init__(self, coordinator: Mac2MQTTCoordinator) -> None:
-        super().__init__(coordinator, "focus_mode", "Focus Mode")
-
-    @property
-    def native_value(self) -> str | None:
-        """Return the current macOS focus mode."""
-        return self.coordinator.data.get("focus_mode")
 
 
 class Mac2MQTTPowerSourceEntity(Mac2MQTTEntity, SensorEntity):
