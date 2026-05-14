@@ -6,6 +6,9 @@
       },
       "display": {
         "default": "mdi:monitor"
+      },
+      "locked": {
+        "default": "mdi:lock"
       }
     },
     "sensor": {
@@ -20,6 +23,9 @@
       },
       "power_source": {
         "default": "mdi:power-plug-battery"
+      },
+      "screensaver_selected": {
+        "default": "mdi:television-ambient-light"
       }
     },
     "switch": {
@@ -47,6 +53,12 @@
       },
       "displaywake": {
         "default": "mdi:monitor"
+      },
+      "screensaver": {
+        "default": "mdi:television-ambient-light"
+      },
+      "screensaver_start": {
+        "default": "mdi:television-ambient-light"
       }
     },
     "text": {
@@ -55,6 +67,12 @@
       },
       "notification": {
         "default": "mdi:message-alert-outline"
+      },
+      "screensaver": {
+        "default": "mdi:television-ambient-light"
+      },
+      "app": {
+        "default": "mdi:application-import"
       }
     }
   }

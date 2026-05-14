@@ -31,9 +31,11 @@ class Mac2MQTTCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             "display": None,
             "display_changed_at": None,
             "focus_mode": None,
+            "locked": None,
             "volume": None,
             "mute": None,
             "power_source": None,
+            "screensaver_selected": None,
         }
 
     async def async_start(self) -> None:
@@ -43,9 +45,11 @@ class Mac2MQTTCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         await self._subscribe("display")
         await self._subscribe("display_changed_at")
         await self._subscribe("focus_mode")
+        await self._subscribe("locked")
         await self._subscribe("volume")
         await self._subscribe("mute")
         await self._subscribe("power_source")
+        await self._subscribe("screensaver_selected")
 
     async def async_stop(self) -> None:
         """Unsubscribe from all topics."""
@@ -60,14 +64,19 @@ class Mac2MQTTCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         def _message_received(msg: mqtt.ReceiveMessage) -> None:
             payload = msg.payload
             parsed: Any = payload
-            if metric in ("alive", "display", "mute"):
+            if metric in ("alive", "display", "locked", "mute"):
                 parsed = payload.lower() == "true"
             elif metric in ("battery", "volume"):
                 try:
                     parsed = int(payload)
                 except ValueError:
                     parsed = None
-            elif metric in ("display_changed_at", "focus_mode", "power_source"):
+            elif metric in (
+                "display_changed_at",
+                "focus_mode",
+                "power_source",
+                "screensaver_selected",
+            ):
                 parsed = payload or None
 
             self.data[metric] = parsed

@@ -29,6 +29,14 @@ async def async_setup_entry(
             Mac2MQTTCommandButton(
                 coordinator, "displaywake", "Display Wake", "mdi:monitor"
             ),
+            Mac2MQTTCommandButton(
+                coordinator,
+                "screensaver",
+                "Start Screensaver",
+                "mdi:television-ambient-light",
+                "start",
+                "screensaver_start",
+            ),
         ]
     )
 
@@ -42,11 +50,14 @@ class Mac2MQTTCommandButton(Mac2MQTTEntity, ButtonEntity):
         command: str,
         name: str,
         icon: str,
+        payload: str | None = None,
+        key: str | None = None,
     ) -> None:
-        super().__init__(coordinator, command, name)
+        super().__init__(coordinator, key or command, name)
         self._command = command
+        self._payload = payload or command
         self._attr_icon = icon
 
     async def async_press(self) -> None:
         """Publish command."""
-        await self.coordinator.async_publish_command(self._command, self._command)
+        await self.coordinator.async_publish_command(self._command, self._payload)
