@@ -19,6 +19,12 @@ ALIVE_DESCRIPTION = BinarySensorEntityDescription(
     entity_category=EntityCategory.DIAGNOSTIC,
 )
 
+DISPLAY_DESCRIPTION = BinarySensorEntityDescription(
+    key="display",
+    name="Display",
+    icon="mdi:monitor",
+)
+
 
 async def async_setup_entry(
     hass: HomeAssistant,
@@ -27,7 +33,12 @@ async def async_setup_entry(
 ) -> None:
     """Set up binary sensors."""
     coordinator: Mac2MQTTCoordinator = hass.data[DOMAIN][entry.entry_id]
-    async_add_entities([Mac2MQTTAliveEntity(coordinator)])
+    async_add_entities(
+        [
+            Mac2MQTTAliveEntity(coordinator),
+            Mac2MQTTDisplayEntity(coordinator),
+        ]
+    )
 
 
 class Mac2MQTTAliveEntity(Mac2MQTTEntity, BinarySensorEntity):
@@ -42,4 +53,19 @@ class Mac2MQTTAliveEntity(Mac2MQTTEntity, BinarySensorEntity):
     def is_on(self) -> bool | None:
         """Return true when daemon is connected to MQTT."""
         value = self.coordinator.data.get("alive")
+        return bool(value) if value is not None else None
+
+
+class Mac2MQTTDisplayEntity(Mac2MQTTEntity, BinarySensorEntity):
+    """Display status entity."""
+
+    entity_description = DISPLAY_DESCRIPTION
+
+    def __init__(self, coordinator: Mac2MQTTCoordinator) -> None:
+        super().__init__(coordinator, "display", "Display")
+
+    @property
+    def is_on(self) -> bool | None:
+        """Return true when at least one display is active."""
+        value = self.coordinator.data.get("display")
         return bool(value) if value is not None else None

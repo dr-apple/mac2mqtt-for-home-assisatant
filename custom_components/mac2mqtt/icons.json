@@ -3,11 +3,17 @@
     "binary_sensor": {
       "alive": {
         "default": "mdi:laptop"
+      },
+      "display": {
+        "default": "mdi:monitor"
       }
     },
     "sensor": {
       "battery": {
         "default": "mdi:battery"
+      },
+      "display_changed_at": {
+        "default": "mdi:clock-outline"
       }
     },
     "switch": {
