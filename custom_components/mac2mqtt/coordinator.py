@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable
+import json
 import logging
 from typing import Any
 
@@ -27,6 +28,7 @@ class Mac2MQTTCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         self._unsubscribers: list[Callable[[], None]] = []
         self.data = {
             "alive": None,
+            "app_options": [],
             "battery": None,
             "display": None,
             "display_changed_at": None,
@@ -34,6 +36,7 @@ class Mac2MQTTCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             "volume": None,
             "mute": None,
             "power_source": None,
+            "screensaver_options": [],
         }
 
     async def async_start(self) -> None:
@@ -46,6 +49,8 @@ class Mac2MQTTCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         await self._subscribe("volume")
         await self._subscribe("mute")
         await self._subscribe("power_source")
+        await self._subscribe_discovery_options("app", "app_options")
+        await self._subscribe_discovery_options("screensaver", "screensaver_options")
 
     async def async_stop(self) -> None:
         """Unsubscribe from all topics."""
@@ -74,6 +79,32 @@ class Mac2MQTTCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 parsed = payload or None
 
             self.data[metric] = parsed
+            self.async_set_updated_data(dict(self.data))
+
+        unsub = await mqtt.async_subscribe(
+            self._hass,
+            topic,
+            _message_received,
+            qos=1,
+            encoding="utf-8",
+        )
+        self._unsubscribers.append(unsub)
+        _LOGGER.debug("Subscribed to %s", topic)
+
+    async def _subscribe_discovery_options(self, object_id: str, data_key: str) -> None:
+        topic = f"homeassistant/select/{self.computer_name}/{object_id}/config"
+
+        @callback
+        def _message_received(msg: mqtt.ReceiveMessage) -> None:
+            try:
+                payload = json.loads(msg.payload)
+            except ValueError:
+                options: list[str] = []
+            else:
+                raw_options = payload.get("options", [])
+                options = [option for option in raw_options if isinstance(option, str)]
+
+            self.data[data_key] = options
             self.async_set_updated_data(dict(self.data))
 
         unsub = await mqtt.async_subscribe(
