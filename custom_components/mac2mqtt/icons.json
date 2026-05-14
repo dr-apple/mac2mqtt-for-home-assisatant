@@ -73,6 +73,9 @@
       },
       "app": {
         "default": "mdi:application-import"
+      },
+      "open_app": {
+        "default": "mdi:application-import"
       }
     }
   }

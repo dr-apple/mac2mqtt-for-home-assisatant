@@ -9,7 +9,7 @@ Custom Home Assistant integration for `mac2mqtt` / `mac2mqttd`.
 - `switch`: Mute, Display Power
 - `number`: Volume (0-100)
 - `button`: Sleep, Shutdown, Display Sleep, Display Wake, Start Screensaver
-- `text`: Say, Notification, Screensaver, Open App
+- `text`: Say, Notification, Screensaver, Open App, Open App Alias
 
 ## MQTT topic mapping
 
@@ -44,6 +44,11 @@ The integration uses:
   - `mac2mqtt/my-macbook/command/screensaver` (`start` or saver name/path)
   - `mac2mqtt/my-macbook/command/app`
   - `mac2mqtt/my-macbook/command/open_app`
+
+On Macs without an internal battery, `status/battery` and `status/power_source`
+are not published and existing retained values are cleared by `mac2mqttd`.
+`status/focus_mode` may contain `off`, `do_not_disturb`, or a named macOS
+Focus mode when macOS exposes it.
 
 ## HACS install
 
