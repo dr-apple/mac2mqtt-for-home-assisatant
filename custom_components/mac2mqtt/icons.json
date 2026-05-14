@@ -14,6 +14,12 @@
       },
       "display_changed_at": {
         "default": "mdi:clock-outline"
+      },
+      "focus_mode": {
+        "default": "mdi:moon-waning-crescent"
+      },
+      "power_source": {
+        "default": "mdi:power-plug-battery"
       }
     },
     "switch": {
@@ -38,6 +44,17 @@
       },
       "displaysleep": {
         "default": "mdi:monitor-off"
+      },
+      "displaywake": {
+        "default": "mdi:monitor"
+      }
+    },
+    "text": {
+      "say": {
+        "default": "mdi:account-voice"
+      },
+      "notification": {
+        "default": "mdi:message-alert-outline"
       }
     }
   }

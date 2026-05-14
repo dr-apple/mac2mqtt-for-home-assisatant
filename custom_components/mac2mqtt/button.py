@@ -26,6 +26,9 @@ async def async_setup_entry(
             Mac2MQTTCommandButton(
                 coordinator, "displaysleep", "Display Sleep", "mdi:monitor-off"
             ),
+            Mac2MQTTCommandButton(
+                coordinator, "displaywake", "Display Wake", "mdi:monitor"
+            ),
         ]
     )
 
