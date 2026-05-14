@@ -19,6 +19,9 @@
     "switch": {
       "mute": {
         "default": "mdi:volume-mute"
+      },
+      "display_power": {
+        "default": "mdi:monitor"
       }
     },
     "number": {
