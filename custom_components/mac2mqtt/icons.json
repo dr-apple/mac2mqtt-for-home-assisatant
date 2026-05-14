@@ -9,6 +9,9 @@
       },
       "locked": {
         "default": "mdi:lock"
+      },
+      "media_playing": {
+        "default": "mdi:play-circle"
       }
     },
     "sensor": {
@@ -28,6 +31,9 @@
       },
       "display_power": {
         "default": "mdi:monitor"
+      },
+      "media_playback": {
+        "default": "mdi:play-pause"
       }
     },
     "number": {
@@ -61,6 +67,9 @@
       },
       "screensaver_start": {
         "default": "mdi:television-ambient-light"
+      },
+      "play_pause": {
+        "default": "mdi:play-pause"
       }
     },
     "text": {

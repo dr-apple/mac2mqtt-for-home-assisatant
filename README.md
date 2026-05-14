@@ -4,12 +4,12 @@ Custom Home Assistant integration for `mac2mqtt` / `mac2mqttd`.
 
 ## Features
 
-- `binary_sensor`: Alive, Display, Locked
+- `binary_sensor`: Alive, Display, Locked, Media Playing
 - `sensor`: Battery, Power Source, Display Changed At
 - `select`: App, Screensaver
-- `switch`: Mute, Display Power
+- `switch`: Mute, Display Power, Media Playback
 - `number`: Volume (0-100)
-- `button`: Sleep, Shutdown, Display Sleep, Display Wake, Start Screensaver
+- `button`: Sleep, Shutdown, Display Sleep, Display Wake, Start Screensaver, Play Pause
 - `text`: Say, Notification, Screensaver, Open App
 
 ## MQTT topic mapping
@@ -28,6 +28,7 @@ The integration uses:
   - `mac2mqtt/my-macbook/status/display`
   - `mac2mqtt/my-macbook/status/display_changed_at`
   - `mac2mqtt/my-macbook/status/locked`
+  - `mac2mqtt/my-macbook/status/media_playing`
   - `mac2mqtt/my-macbook/status/volume`
   - `mac2mqtt/my-macbook/status/mute`
 - Command publish:
@@ -42,13 +43,18 @@ The integration uses:
   - `mac2mqtt/my-macbook/command/notification` (text or JSON with `title` and `message`)
   - `mac2mqtt/my-macbook/command/screensaver` (saver name/path)
   - `mac2mqtt/my-macbook/command/app`
+  - `mac2mqtt/my-macbook/command/media_playback` (`play` / `pause` / `toggle`)
+  - `mac2mqtt/my-macbook/command/play_pause`
 
 On Macs without an internal battery, `status/battery` and `status/power_source`
 are not published and existing retained values are cleared by `mac2mqttd`.
-The Mac app publishes MQTT Discovery `select` entities for `App` and
-`Screensaver`; this integration reads those option lists and exposes native
-Mac2MQTT select entities that publish to `command/app` and `command/screensaver`.
+The integration exposes native Mac2MQTT select entities for `App` and
+`Screensaver` that publish to `command/app` and `command/screensaver`. Their
+option lists are read from the Mac app's retained MQTT Discovery config when
+available.
 Notifications are shown as a frontmost dialog on the Mac.
+`command/say` pauses active media playback before speaking and resumes it after
+speech finishes.
 
 ## HACS install
 

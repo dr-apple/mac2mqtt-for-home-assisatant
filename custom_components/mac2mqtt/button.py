@@ -37,6 +37,12 @@ async def async_setup_entry(
                 "start",
                 "screensaver_start",
             ),
+            Mac2MQTTCommandButton(
+                coordinator,
+                "play_pause",
+                "Play Pause",
+                "mdi:play-pause",
+            ),
         ]
     )
 

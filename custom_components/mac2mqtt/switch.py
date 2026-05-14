@@ -23,6 +23,7 @@ async def async_setup_entry(
         [
             Mac2MQTTMuteSwitch(coordinator),
             Mac2MQTTDisplayPowerSwitch(coordinator),
+            Mac2MQTTMediaPlaybackSwitch(coordinator),
         ]
     )
 
@@ -71,3 +72,26 @@ class Mac2MQTTDisplayPowerSwitch(Mac2MQTTEntity, SwitchEntity):
     async def async_turn_off(self, **kwargs: object) -> None:
         """Sleep display output."""
         await self.coordinator.async_publish_command("display", "sleep")
+
+
+class Mac2MQTTMediaPlaybackSwitch(Mac2MQTTEntity, SwitchEntity):
+    """Media playback switch."""
+
+    _attr_icon = "mdi:play-pause"
+
+    def __init__(self, coordinator: Mac2MQTTCoordinator) -> None:
+        super().__init__(coordinator, "media_playback", "Media Playback")
+
+    @property
+    def is_on(self) -> bool | None:
+        """Return true when media is currently playing."""
+        value = self.coordinator.data.get("media_playing")
+        return bool(value) if value is not None else None
+
+    async def async_turn_on(self, **kwargs: object) -> None:
+        """Start media playback."""
+        await self.coordinator.async_publish_command("media_playback", "play")
+
+    async def async_turn_off(self, **kwargs: object) -> None:
+        """Pause media playback."""
+        await self.coordinator.async_publish_command("media_playback", "pause")
