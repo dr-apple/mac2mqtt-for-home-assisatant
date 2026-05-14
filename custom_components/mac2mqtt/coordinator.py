@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable
+import json
 import logging
 from typing import Any
 
@@ -27,10 +28,10 @@ class Mac2MQTTCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         self._unsubscribers: list[Callable[[], None]] = []
         self.data = {
             "alive": None,
+            "apps": None,
             "battery": None,
             "display": None,
             "display_changed_at": None,
-            "focus_mode": None,
             "locked": None,
             "volume": None,
             "mute": None,
@@ -41,10 +42,10 @@ class Mac2MQTTCoordinator(DataUpdateCoordinator[dict[str, Any]]):
     async def async_start(self) -> None:
         """Subscribe to status topics."""
         await self._subscribe("alive")
+        await self._subscribe("apps")
         await self._subscribe("battery")
         await self._subscribe("display")
         await self._subscribe("display_changed_at")
-        await self._subscribe("focus_mode")
         await self._subscribe("locked")
         await self._subscribe("volume")
         await self._subscribe("mute")
@@ -66,6 +67,11 @@ class Mac2MQTTCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             parsed: Any = payload
             if metric in ("alive", "display", "locked", "mute"):
                 parsed = payload.lower() == "true"
+            elif metric == "apps":
+                try:
+                    parsed = json.loads(payload)
+                except ValueError:
+                    parsed = []
             elif metric in ("battery", "volume"):
                 try:
                     parsed = int(payload)
@@ -73,7 +79,6 @@ class Mac2MQTTCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                     parsed = None
             elif metric in (
                 "display_changed_at",
-                "focus_mode",
                 "power_source",
                 "screensaver_selected",
             ):
