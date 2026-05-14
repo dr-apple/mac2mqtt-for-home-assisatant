@@ -2,11 +2,14 @@
 
 from __future__ import annotations
 
+from datetime import datetime
+
 from homeassistant.components.sensor import SensorDeviceClass, SensorEntity, SensorStateClass
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import PERCENTAGE
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.util import dt as dt_util
 
 from .const import DOMAIN
 from .coordinator import Mac2MQTTCoordinator
@@ -20,7 +23,12 @@ async def async_setup_entry(
 ) -> None:
     """Set up sensors."""
     coordinator: Mac2MQTTCoordinator = hass.data[DOMAIN][entry.entry_id]
-    async_add_entities([Mac2MQTTBatteryEntity(coordinator)])
+    async_add_entities(
+        [
+            Mac2MQTTBatteryEntity(coordinator),
+            Mac2MQTTDisplayChangedAtEntity(coordinator),
+        ]
+    )
 
 
 class Mac2MQTTBatteryEntity(Mac2MQTTEntity, SensorEntity):
@@ -39,3 +47,22 @@ class Mac2MQTTBatteryEntity(Mac2MQTTEntity, SensorEntity):
         """Return battery state."""
         value = self.coordinator.data.get("battery")
         return int(value) if value is not None else None
+
+
+class Mac2MQTTDisplayChangedAtEntity(Mac2MQTTEntity, SensorEntity):
+    """Last display status change timestamp sensor."""
+
+    _attr_device_class = SensorDeviceClass.TIMESTAMP
+    _attr_icon = "mdi:clock-outline"
+
+    def __init__(self, coordinator: Mac2MQTTCoordinator) -> None:
+        super().__init__(coordinator, "display_changed_at", "Display Changed At")
+
+    @property
+    def native_value(self) -> datetime | None:
+        """Return the timestamp of the last display status change."""
+        value = self.coordinator.data.get("display_changed_at")
+        if not value:
+            return None
+
+        return dt_util.parse_datetime(value)
