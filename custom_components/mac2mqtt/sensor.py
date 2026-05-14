@@ -29,6 +29,7 @@ async def async_setup_entry(
             Mac2MQTTDisplayChangedAtEntity(coordinator),
             Mac2MQTTFocusModeEntity(coordinator),
             Mac2MQTTPowerSourceEntity(coordinator),
+            Mac2MQTTScreenSaverSelectedEntity(coordinator),
         ]
     )
 
@@ -96,3 +97,17 @@ class Mac2MQTTPowerSourceEntity(Mac2MQTTEntity, SensorEntity):
     def native_value(self) -> str | None:
         """Return the current Mac power source."""
         return self.coordinator.data.get("power_source")
+
+
+class Mac2MQTTScreenSaverSelectedEntity(Mac2MQTTEntity, SensorEntity):
+    """Selected screen saver sensor."""
+
+    _attr_icon = "mdi:television-ambient-light"
+
+    def __init__(self, coordinator: Mac2MQTTCoordinator) -> None:
+        super().__init__(coordinator, "screensaver_selected", "Screensaver Selected")
+
+    @property
+    def native_value(self) -> str | None:
+        """Return the selected screen saver."""
+        return self.coordinator.data.get("screensaver_selected")

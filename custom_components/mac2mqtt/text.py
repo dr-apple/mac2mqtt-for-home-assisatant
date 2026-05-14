@@ -28,6 +28,18 @@ async def async_setup_entry(
                 "Notification",
                 "mdi:message-alert-outline",
             ),
+            Mac2MQTTCommandText(
+                coordinator,
+                "screensaver",
+                "Screensaver",
+                "mdi:television-ambient-light",
+            ),
+            Mac2MQTTCommandText(
+                coordinator,
+                "app",
+                "Open App",
+                "mdi:application-import",
+            ),
         ]
     )
 

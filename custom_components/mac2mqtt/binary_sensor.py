@@ -25,6 +25,12 @@ DISPLAY_DESCRIPTION = BinarySensorEntityDescription(
     icon="mdi:monitor",
 )
 
+LOCKED_DESCRIPTION = BinarySensorEntityDescription(
+    key="locked",
+    name="Locked",
+    icon="mdi:lock",
+)
+
 
 async def async_setup_entry(
     hass: HomeAssistant,
@@ -37,6 +43,7 @@ async def async_setup_entry(
         [
             Mac2MQTTAliveEntity(coordinator),
             Mac2MQTTDisplayEntity(coordinator),
+            Mac2MQTTLockedEntity(coordinator),
         ]
     )
 
@@ -68,4 +75,19 @@ class Mac2MQTTDisplayEntity(Mac2MQTTEntity, BinarySensorEntity):
     def is_on(self) -> bool | None:
         """Return true when at least one display is active."""
         value = self.coordinator.data.get("display")
+        return bool(value) if value is not None else None
+
+
+class Mac2MQTTLockedEntity(Mac2MQTTEntity, BinarySensorEntity):
+    """Session lock status entity."""
+
+    entity_description = LOCKED_DESCRIPTION
+
+    def __init__(self, coordinator: Mac2MQTTCoordinator) -> None:
+        super().__init__(coordinator, "locked", "Locked")
+
+    @property
+    def is_on(self) -> bool | None:
+        """Return true when the user session is locked."""
+        value = self.coordinator.data.get("locked")
         return bool(value) if value is not None else None
