@@ -5,11 +5,12 @@ Custom Home Assistant integration for `mac2mqtt` / `mac2mqttd`.
 ## Features
 
 - `binary_sensor`: Alive, Display, Locked
-- `sensor`: Battery, Power Source, Display Changed At, Focus Mode, Screensaver Selected
+- `sensor`: Apps, Battery, Power Source, Display Changed At, Screensaver Selected
+- `select`: App
 - `switch`: Mute, Display Power
 - `number`: Volume (0-100)
 - `button`: Sleep, Shutdown, Display Sleep, Display Wake, Start Screensaver
-- `text`: Say, Notification, Foreground Notification, Screensaver, Open App, Open App Alias
+- `text`: Say, Notification, Foreground Notification, Screensaver, Open App
 
 ## MQTT topic mapping
 
@@ -22,11 +23,11 @@ The integration uses:
 
 - Status subscribe:
   - `mac2mqtt/my-macbook/status/alive`
+  - `mac2mqtt/my-macbook/status/apps`
   - `mac2mqtt/my-macbook/status/battery`
   - `mac2mqtt/my-macbook/status/power_source`
   - `mac2mqtt/my-macbook/status/display`
   - `mac2mqtt/my-macbook/status/display_changed_at`
-  - `mac2mqtt/my-macbook/status/focus_mode`
   - `mac2mqtt/my-macbook/status/screensaver_selected`
   - `mac2mqtt/my-macbook/status/locked`
   - `mac2mqtt/my-macbook/status/volume`
@@ -43,12 +44,13 @@ The integration uses:
   - `mac2mqtt/my-macbook/command/notification` (text or JSON with `title`, `message`, and `foreground`)
   - `mac2mqtt/my-macbook/command/screensaver` (`start` or saver name/path)
   - `mac2mqtt/my-macbook/command/app`
-  - `mac2mqtt/my-macbook/command/open_app`
 
 On Macs without an internal battery, `status/battery` and `status/power_source`
 are not published and existing retained values are cleared by `mac2mqttd`.
-`status/focus_mode` may contain `off`, `do_not_disturb`, or a named macOS
-Focus mode when macOS exposes it.
+`status/apps` contains a JSON list of installed apps; the integration exposes
+the app count as the sensor state and the app objects as attributes. It also
+feeds the `App` select entity, which publishes the selected app name to
+`command/app`.
 The `Foreground Notification` entity sends the notification command as JSON with
 `foreground: true`, which opens a frontmost dialog on the Mac.
 

@@ -50,12 +50,6 @@ async def async_setup_entry(
                 "Open App",
                 "mdi:application-import",
             ),
-            Mac2MQTTCommandText(
-                coordinator,
-                "open_app",
-                "Open App Alias",
-                "mdi:application-import",
-            ),
         ]
     )
 

@@ -12,14 +12,14 @@
       }
     },
     "sensor": {
+      "apps": {
+        "default": "mdi:application-array"
+      },
       "battery": {
         "default": "mdi:battery"
       },
       "display_changed_at": {
         "default": "mdi:clock-outline"
-      },
-      "focus_mode": {
-        "default": "mdi:moon-waning-crescent"
       },
       "power_source": {
         "default": "mdi:power-plug-battery"
@@ -39,6 +39,11 @@
     "number": {
       "volume": {
         "default": "mdi:volume-high"
+      }
+    },
+    "select": {
+      "app_select": {
+        "default": "mdi:application"
       }
     },
     "button": {
@@ -75,9 +80,6 @@
         "default": "mdi:television-ambient-light"
       },
       "app": {
-        "default": "mdi:application-import"
-      },
-      "open_app": {
         "default": "mdi:application-import"
       }
     }
