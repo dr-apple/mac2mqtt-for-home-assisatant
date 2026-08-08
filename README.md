@@ -2,7 +2,7 @@
 
 Custom Home Assistant integration for `mac2mqtt` / `mac2mqttd`.
 
-Version `0.12.0` is compatible with Home Assistant `2026.8` and tested against
+Version `0.12.1` is compatible with Home Assistant `2026.8` and tested against
 `2026.8.1`. Entity IDs remain stable when the MQTT topic or computer name changes.
 
 ## Features
