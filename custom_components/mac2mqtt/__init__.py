@@ -68,7 +68,7 @@ async def _async_migrate_registry_entries(hass: HomeAssistant, entry: ConfigEntr
         legacy_identifier = (DOMAIN, legacy_prefix.removesuffix("_"))
         if (
             device_entry := device_registry.async_get_device(identifiers={legacy_identifier})
-        ) and device_entry.config_entry_id == entry.entry_id:
+        ) and entry.entry_id in device_entry.config_entries:
             device_registry.async_update_device(
                 device_entry.id,
                 new_identifiers={(DOMAIN, entry.entry_id)},

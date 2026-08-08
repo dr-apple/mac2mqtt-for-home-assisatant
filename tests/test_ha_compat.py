@@ -88,4 +88,5 @@ async def test_legacy_registry_ids_migrate_without_entity_id_change(
 
     migrated_device = device_registry.async_get(legacy_device.id)
     assert migrated_device is not None
+    assert entry.entry_id in migrated_device.config_entries
     assert migrated_device.identifiers == {(DOMAIN, entry.entry_id)}
