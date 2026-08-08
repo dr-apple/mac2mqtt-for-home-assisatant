@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable
 import json
 import logging
+from collections.abc import Callable
 from typing import Any
 
 from homeassistant.components import mqtt
@@ -19,9 +19,16 @@ _LOGGER = logging.getLogger(__name__)
 class Mac2MQTTCoordinator(DataUpdateCoordinator[dict[str, Any]]):
     """Store current topic states and handle MQTT traffic."""
 
-    def __init__(self, hass: HomeAssistant, base_topic: str, computer_name: str) -> None:
+    def __init__(
+        self,
+        hass: HomeAssistant,
+        entry_id: str,
+        base_topic: str,
+        computer_name: str,
+    ) -> None:
         super().__init__(hass, _LOGGER, name="mac2mqtt")
         self._hass = hass
+        self.entry_id = entry_id
         self.base_topic = base_topic
         self.computer_name = computer_name
         self.prefix = topic_prefix(base_topic, computer_name)
@@ -104,7 +111,11 @@ class Mac2MQTTCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 options: list[str] = []
             else:
                 raw_options = payload.get("options", [])
-                options = [option for option in raw_options if isinstance(option, str)]
+                options = (
+                    [option for option in raw_options if isinstance(option, str)]
+                    if isinstance(raw_options, list)
+                    else []
+                )
 
             self.data[data_key] = options
             self.async_set_updated_data(dict(self.data))

@@ -19,6 +19,10 @@
     }
   },
   "options": {
+    "error": {
+      "required": "Please fill out all fields.",
+      "already_configured": "This mac2mqtt host is already configured."
+    },
     "step": {
       "init": {
         "title": "Mac2MQTT options",
