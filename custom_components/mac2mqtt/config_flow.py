@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import voluptuous as vol
-
 from homeassistant import config_entries
 from homeassistant.const import CONF_NAME
 from homeassistant.core import callback
@@ -55,7 +54,7 @@ class Mac2MQTTConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         return Mac2MQTTOptionsFlow(config_entry)
 
 
-class Mac2MQTTOptionsFlow(config_entries.OptionsFlow):
+class Mac2MQTTOptionsFlow(config_entries.OptionsFlowWithReload):
     """Handle options for mac2mqtt."""
 
     def __init__(self, config_entry: config_entries.ConfigEntry) -> None:
@@ -64,28 +63,55 @@ class Mac2MQTTOptionsFlow(config_entries.OptionsFlow):
     async def async_step_init(self, user_input: dict | None = None):
         """Manage options."""
         if user_input is not None:
+            user_input = {
+                **user_input,
+                CONF_NAME: user_input[CONF_NAME].strip(),
+                CONF_BASE_TOPIC: user_input[CONF_BASE_TOPIC].strip(),
+                CONF_COMPUTER_NAME: user_input[CONF_COMPUTER_NAME].strip(),
+            }
+            if not user_input[CONF_BASE_TOPIC] or not user_input[CONF_COMPUTER_NAME]:
+                return self.async_show_form(
+                    step_id="init",
+                    data_schema=self._schema(user_input),
+                    errors={"base": "required"},
+                )
+            unique_id = f"{user_input[CONF_BASE_TOPIC]}:{user_input[CONF_COMPUTER_NAME]}"
+            if any(
+                other.entry_id != self._entry.entry_id and other.unique_id == unique_id
+                for other in self.hass.config_entries.async_entries(DOMAIN)
+            ):
+                return self.async_show_form(
+                    step_id="init",
+                    data_schema=self._schema(user_input),
+                    errors={"base": "already_configured"},
+                )
+            self.hass.config_entries.async_update_entry(
+                self._entry,
+                title=user_input[CONF_NAME].strip(),
+                unique_id=unique_id,
+            )
             return self.async_create_entry(title="", data=user_input)
 
-        schema = vol.Schema(
+        return self.async_show_form(
+            step_id="init",
+            data_schema=self._schema(self._entry.options),
+        )
+
+    def _schema(self, options: dict) -> vol.Schema:
+        """Return the options schema."""
+        return vol.Schema(
             {
                 vol.Required(
                     CONF_NAME,
-                    default=self._entry.options.get(
-                        CONF_NAME, self._entry.data.get(CONF_NAME, "Mac2MQTT")
-                    ),
+                    default=options.get(CONF_NAME, self._entry.data.get(CONF_NAME, "Mac2MQTT")),
                 ): str,
                 vol.Required(
                     CONF_COMPUTER_NAME,
-                    default=self._entry.options.get(
-                        CONF_COMPUTER_NAME, self._entry.data[CONF_COMPUTER_NAME]
-                    ),
+                    default=options.get(CONF_COMPUTER_NAME, self._entry.data[CONF_COMPUTER_NAME]),
                 ): str,
                 vol.Required(
                     CONF_BASE_TOPIC,
-                    default=self._entry.options.get(
-                        CONF_BASE_TOPIC, self._entry.data[CONF_BASE_TOPIC]
-                    ),
+                    default=options.get(CONF_BASE_TOPIC, self._entry.data[CONF_BASE_TOPIC]),
                 ): str,
             }
         )
-        return self.async_show_form(step_id="init", data_schema=schema)

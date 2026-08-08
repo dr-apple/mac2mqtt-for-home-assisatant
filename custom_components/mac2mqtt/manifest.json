@@ -2,18 +2,19 @@
   "domain": "mac2mqtt",
   "name": "Mac2MQTT",
   "codeowners": [
-    "@drapple"
+    "@dr-apple"
   ],
   "config_flow": true,
   "dependencies": [
     "mqtt"
   ],
-  "documentation": "https://github.com/drapple/mac2mqtt-hacs",
+  "documentation": "https://github.com/dr-apple/mac2mqtt-for-home-assisatant",
+  "integration_type": "device",
   "iot_class": "local_push",
-  "issue_tracker": "https://github.com/drapple/mac2mqtt-hacs/issues",
+  "issue_tracker": "https://github.com/dr-apple/mac2mqtt-for-home-assisatant/issues",
   "loggers": [
     "custom_components.mac2mqtt"
   ],
   "requirements": [],
-  "version": "0.1.0"
+  "version": "0.12.0"
 }
