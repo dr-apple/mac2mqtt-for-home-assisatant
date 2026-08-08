@@ -2,6 +2,9 @@
 
 Custom Home Assistant integration for `mac2mqtt` / `mac2mqttd`.
 
+Version `0.12.0` is compatible with Home Assistant `2026.8` and tested against
+`2026.8.1`. Entity IDs remain stable when the MQTT topic or computer name changes.
+
 ## Features
 
 - `binary_sensor`: Alive, Display, Locked, Media Playing
@@ -58,7 +61,7 @@ speech finishes.
 
 ## HACS install
 
-1. Push this project to a GitHub repo, e.g. `drapple/mac2mqtt-hacs`.
+1. Use the repository `https://github.com/dr-apple/mac2mqtt-for-home-assisatant`.
 2. In Home Assistant: HACS -> Integrations -> three dots -> Custom repositories.
 3. Add repo URL and select category `Integration`.
 4. Install `Mac2MQTT`.
