@@ -26,6 +26,10 @@ Version `0.12.1` is compatible with Home Assistant `2026.8` and tested against `
 
 *Illustration – entities created for one Mac.*
 
+![Mac device page in Home Assistant](docs/images/ha-device-page.png)
+
+*Real screenshot from a Home Assistant installation (German UI, personal data replaced).*
+
 ## Requirements
 
 - Home Assistant MQTT integration configured and connected.

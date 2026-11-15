@@ -26,6 +26,10 @@ Version `0.12.1` ist mit Home Assistant `2026.8` kompatibel und gegen `2026.8.1`
 
 *Illustration – Entitäten eines Macs.*
 
+![Mac-Geräteseite in Home Assistant](docs/images/ha-device-page.png)
+
+*Echter Screenshot aus einer Home-Assistant-Installation (persönliche Daten ersetzt).*
+
 ## Voraussetzungen
 
 - MQTT-Integration in Home Assistant eingerichtet und verbunden.
