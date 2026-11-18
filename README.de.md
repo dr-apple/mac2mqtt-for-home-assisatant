@@ -38,7 +38,7 @@ Version `0.12.1` ist mit Home Assistant `2026.8` kompatibel und gegen `2026.8.1`
 ## Installation mit HACS
 
 1. In Home Assistant: HACS → Integrationen → drei Punkte → Benutzerdefinierte Repositories.
-2. `https://github.com/dr-apple/mac2mqtt-for-home-assisatant` mit Kategorie `Integration` hinzufügen.
+2. `https://github.com/dr-apple/mac2mqtt-for-home-assistant` mit Kategorie `Integration` hinzufügen.
 3. `Mac2MQTT` installieren.
 4. Home Assistant neu starten.
 5. Einstellungen → Geräte & Dienste → Integration hinzufügen → `Mac2MQTT`.
