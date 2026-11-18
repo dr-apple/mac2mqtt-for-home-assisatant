@@ -12,6 +12,12 @@ Version `0.12.1` is compatible with Home Assistant `2026.8` and tested against `
 
 ![How it works: Mac ⇄ MQTT broker ⇄ Home Assistant](docs/images/how-it-works.svg)
 
+## Video
+
+[![Video: “Dein Mac. In Home Assistant.” – Mac2MQTT on YouTube](docs/images/video-thumbnail.jpg)](https://youtu.be/dFKfCVW2rZc)
+
+▶ **[Watch on YouTube](https://youtu.be/dFKfCVW2rZc)** (German, about 3 minutes): installation via the Home Assistant Marketplace and every feature in action. There is also a [40-second Short](https://youtube.com/shorts/s4F8T1BCyOY).
+
 ## Features
 
 - `binary_sensor`: Alive, Display, Locked, Media Playing
